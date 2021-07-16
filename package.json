@@ -1,0 +1,19 @@
+{
+  "name": "puhelinluettelo-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/persorkki/fullstack-puhelinluettelo.git"
+  },
+  "author": "persorkki",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/persorkki/fullstack-puhelinluettelo/issues"
+  },
+  "homepage": "https://github.com/persorkki/fullstack-puhelinluettelo#readme"
+}
