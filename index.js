@@ -30,6 +30,14 @@ app.get('/api/persons', (req, res) => {
     res.json(phoneNumbers)
 })
 
+app.get('/info', (req, res) => {
+    let date = new Date()
+    const info = `
+    <p>Phonebook has info for ${phoneNumbers.length} people</p>
+    <p>${date}</p>`
+    res.send(info)
+}) 
+
 const port = 3001
 app.listen(port, () => {
     console.log(`listening on port ${port}`);
