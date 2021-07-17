@@ -26,3 +26,11 @@ phoneNumbers = [
 
 const baseUrl = 'http://localhost:3001/api/persons'
 
+app.get('/api/persons', (req, res) => {
+    res.json(phoneNumbers)
+})
+
+const port = 3001
+app.listen(port, () => {
+    console.log(`listening on port ${port}`);
+})
