@@ -30,6 +30,19 @@ app.get('/api/persons', (req, res) => {
     res.json(phoneNumbers)
 })
 
+app.get('/api/persons/:id', (req, res) => {
+    const id = Number(req.params.id)
+    const number = phoneNumbers.find(pn => pn.id === id)
+    if (!number)
+    {
+        res.status(400).end()
+    }
+    else {
+        res.json(number)
+    }
+})
+
+
 app.get('/info', (req, res) => {
     let date = new Date()
     const info = `
