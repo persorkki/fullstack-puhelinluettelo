@@ -42,6 +42,17 @@ app.get('/api/persons/:id', (req, res) => {
     }
 })
 
+app.delete('/api/persons/:id', (req, res) => {
+    const id = Number(req.params.id)
+    if (phoneNumbers.find(pn => pn.id === id)) {
+        phoneNumbers = phoneNumbers.filter(n => n.id !== id)
+        console.log(`deleted id ${id}`)
+        res.status(204).end()
+    }
+    else {
+        res.status(400).end()
+    }
+})
 
 app.get('/info', (req, res) => {
     let date = new Date()
