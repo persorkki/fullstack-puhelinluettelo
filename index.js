@@ -8,9 +8,7 @@ app.use(express.json())
 morgan.token('body', (req, res) => {
     return JSON.stringify(req.body)
 })
-
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
-
 
 phoneNumbers = [
     {
@@ -34,8 +32,6 @@ phoneNumbers = [
         number: "39-23-6423122"
     },
 ]
-
-const baseUrl = 'http://localhost:3001/api/persons'
 
 app.get('/api/persons', (req, res) => {
     res.json(phoneNumbers)
