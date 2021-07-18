@@ -4,24 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon index.js",
     "start": "node index.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/persorkki/fullstack-puhelinluettelo.git"
-  },
   "author": "persorkki",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/persorkki/fullstack-puhelinluettelo/issues"
-  },
-  "homepage": "https://github.com/persorkki/fullstack-puhelinluettelo#readme",
   "devDependencies": {
     "nodemon": "^2.0.12"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "morgan": "^1.10.0"
   }

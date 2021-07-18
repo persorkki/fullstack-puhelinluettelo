@@ -1,6 +1,6 @@
 const express = require('express')
 const morgan = require('morgan')
-
+const cors = require('cors')
 const app = express()
 
 app.use(express.json())
@@ -9,6 +9,8 @@ morgan.token('body', (req, res) => {
     return JSON.stringify(req.body)
 })
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
+app.use(cors())
+
 
 phoneNumbers = [
     {
@@ -72,7 +74,6 @@ const getRandomId = () => {
     return id
 }
 
-
 app.post('/api/persons/', (req, res) => {
     const body = req.body
 
@@ -96,7 +97,6 @@ app.post('/api/persons/', (req, res) => {
             res.status(400).json({error:`name is already in the phonebook`})
         }
     }
-    
 })
 
 app.get('/info', (req, res) => {
@@ -109,5 +109,6 @@ app.get('/info', (req, res) => {
 
 const port = 3001
 app.listen(port, () => {
-    console.log(`listening on port ${port}`);
+    console.log(`CORS enabled for all origins`);
+    console.log(`listening on PORT: ${port}`);
 })
