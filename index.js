@@ -107,7 +107,7 @@ app.get('/info', (req, res) => {
     res.send(info)
 }) 
 
-const port = 3001
+const port = process.env.PORT || 3001
 app.listen(port, () => {
     console.log(`CORS enabled for all origins`);
     console.log(`listening on PORT: ${port}`);
