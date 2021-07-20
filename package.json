@@ -6,13 +6,12 @@
   "scripts": {
     "dev": "nodemon index.js",
     "start": "node index.js",
-    "deploy":"git push heroku main",
-    "build:ui:windows":"rmdir /s build && cd ../puhelinluettelo-frontend/ && npm run build --prod && xcopy .\\build ..\\puhelinluettelo-backend\\build\\ /E /I /Y",
-    "deploy:full:windows":"npm run build:ui:windows && git add . && git commit -m uibuild && git push heroku main && npm run deploy",
-    "build:ui":"rm -rf build && cd ../puhelinluettelo-frontend/ && npm run build --prod && cp -r build ../puhelinluettelo-backend",
-    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push heroku main && npm run deploy",    
-
-    "logs:prod":"heroku logs -t"
+    "deploy": "git push heroku main",
+    "build:ui:windows": "rmdir /s build && cd ../puhelinluettelo-frontend/ && npm run build --prod && xcopy .\\build ..\\puhelinluettelo-backend\\build\\ /E /I /Y",
+    "deploy:full:windows": "npm run build:ui:windows && git add . && git commit -m uibuild && git push heroku main && npm run deploy",
+    "build:ui": "rm -rf build && cd ../puhelinluettelo-frontend/ && npm run build --prod && cp -r build ../puhelinluettelo-backend",
+    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push heroku main && npm run deploy",
+    "logs:prod": "heroku logs -t"
   },
   "author": "persorkki",
   "license": "MIT",
@@ -22,6 +21,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "mongoose": "^5.13.3",
     "morgan": "^1.10.0"
   }
 }
