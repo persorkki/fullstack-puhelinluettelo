@@ -1,6 +1,7 @@
 const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
+require('dotenv').config()
 
 const app = express()
 
@@ -13,43 +14,27 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :b
 app.use(cors())
 app.use(express.static('build'))
 
-phoneNumbers = [
-    {
-        id: 1,
-        name: "Arto Hellas",
-        number: "040-123456"
-    },
-    {
-        id: 2,
-        name: "Ada Lovelace",
-        number: "39-44-5323523"
-    },
-    {
-        id: 3,
-        name: "Dan Abramov",
-        number: "12-43-234345"
-    },
-    {
-        id: 4,
-        name: "Mary Poppendick",
-        number: "39-23-6423122"
-    },
-]
+const People = require('./models/person')
 
 app.get('/api/persons', (req, res) => {
-    res.json(phoneNumbers)
+    People.find({})
+        .then(people => {
+            console.log(people);
+            res.json(people)
+        })
+        .catch(error => {
+            res.status(400).end()
+        })
 })
 
 app.get('/api/persons/:id', (req, res) => {
-    const id = Number(req.params.id)
-    const number = phoneNumbers.find(pn => pn.id === id)
-    if (!number)
-    {
-        res.status(400).end()
-    }
-    else {
-        res.json(number)
-    }
+    People.findById(req.params.id)
+        .then(person => {
+            res.json(person)
+        })
+        .catch(err => {
+            res.status(400).end()
+        })
 })
 
 app.delete('/api/persons/:id', (req, res) => {
@@ -63,18 +48,32 @@ app.delete('/api/persons/:id', (req, res) => {
         res.status(400).end()
     }
 })
+app.post('/api/persons', (req, res) => {
+    const body = req.body
+    if (!body.name || !body.number) {
+        res.status(400).json({error:`missing name or number`})
+    }
+    const person = new People({
+        name: body.name,
+        number: body.number
+    })
+    person.save().then(p => {
+        res.json(p)
+    })
+    /*
+    People.find({ name: body.name })
+        .then(dude => console.log(dude.name) )
+        .catch(err => {
+            const person = new People({
+                name: body.name,
+                number: body.number
+            })
+            person.save().then(p => console.log(`saved object`))
 
-/*  generoidaan satunnainen ID ja katsotaan löytyykö se jo phonebookista
-    jos löytyy, niin tehdään uusia kunnes löytyy sellainen joka ei ole käytössä
-    ja kyllä, jää jumiin jos kaikki numerot viety*/
-const getRandomId = () => {
-    let id = 0
-    do {
-        id = Math.floor(Math.random() * 100000)
-    } while (phoneNumbers.find(pn => pn.id === id))
-    return id
-}
-
+        })
+    */
+})
+/*
 app.post('/api/persons/', (req, res) => {
     const body = req.body
 
@@ -99,13 +98,15 @@ app.post('/api/persons/', (req, res) => {
         }
     }
 })
+*/
 
 app.get('/info', (req, res) => {
     let date = new Date()
-    const info = `
-    <p>Phonebook has info for ${phoneNumbers.length} people</p>
-    <p>${date}</p>`
-    res.send(info)
+    People.count({}).then(amount => {
+        res.send(`
+        <p>Phonebook has info for ${amount} people</p>
+        <p>${date}</p>`)
+    })
 }) 
 
 const port = process.env.PORT || 3001
