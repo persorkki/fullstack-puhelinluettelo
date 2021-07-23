@@ -19,7 +19,6 @@ const People = require('./models/person')
 app.get('/api/persons', (req, res) => {
     People.find({})
         .then(people => {
-            console.log(people);
             res.json(people)
         })
         .catch(error => {
@@ -37,68 +36,36 @@ app.get('/api/persons/:id', (req, res) => {
         })
 })
 
-app.delete('/api/persons/:id', (req, res) => {
-    const id = Number(req.params.id)
-    if (phoneNumbers.find(pn => pn.id === id)) {
-        phoneNumbers = phoneNumbers.filter(n => n.id !== id)
-        console.log(`deleted id ${id}`)
-        res.status(204).end()
-    }
-    else {
-        res.status(400).end()
-    }
+app.delete('/api/persons/:id', (req, res, next) => {
+    const id = req.params.id
+    People.findById(id)
+        .then(person => {
+            if (person) {
+                console.log(`deleting ${person}`);
+                People.findByIdAndRemove(id)
+                    .then(result => res.status(204).end())
+                    .catch(error => res.status(400).end())
+            }
+            else {
+                res.status(400).end()
+            }
+        })
+        .catch(error => next(error))
 })
-app.post('/api/persons', (req, res) => {
+
+app.post('/api/persons', (req, res, next) => {
     const body = req.body
     if (!body.name || !body.number) {
-        res.status(400).json({error:`missing name or number`})
+        res.status(400).json({ error: `missing name or number` })
     }
     const person = new People({
         name: body.name,
         number: body.number
     })
-    person.save().then(p => {
-        res.json(p)
-    })
-    /*
-    People.find({ name: body.name })
-        .then(dude => console.log(dude.name) )
-        .catch(err => {
-            const person = new People({
-                name: body.name,
-                number: body.number
-            })
-            person.save().then(p => console.log(`saved object`))
-
-        })
-    */
+    person.save()
+        .then(result => res.json(result))
+        .catch(error => next(error))
 })
-/*
-app.post('/api/persons/', (req, res) => {
-    const body = req.body
-
-    //lähetetään virhe jos nimi tai numero puuttuu
-    if (!body.name || !body.number) {
-        res.status(400).json({error:`missing name or number`})
-    }
-    else {
-        //jos annettua nimeä ei löydy puhelinluettelosta, voidaan lisätä se listaan
-        if (!phoneNumbers.find(pn => pn.name === body.name)) {
-            const newObj = {
-                id: getRandomId(),
-                name: body.name,
-                number: body.number,
-            }
-            phoneNumbers = phoneNumbers.concat(newObj)
-            res.json(newObj)
-        }
-        else {
-            //ja jos nimi löytyi jo puhelinluettelosta, annetaan virhe
-            res.status(400).json({error:`name is already in the phonebook`})
-        }
-    }
-})
-*/
 
 app.get('/info', (req, res) => {
     let date = new Date()
@@ -107,7 +74,14 @@ app.get('/info', (req, res) => {
         <p>Phonebook has info for ${amount} people</p>
         <p>${date}</p>`)
     })
-}) 
+})
+
+const errorHandler = (error, request, response, next) => {
+    console.error(error.message)
+    next(error)
+}
+
+app.use(errorHandler)
 
 const port = process.env.PORT || 3001
 app.listen(port, () => {
